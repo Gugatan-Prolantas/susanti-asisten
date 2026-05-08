@@ -8,14 +8,17 @@ import os
 # === KONFIGURASI DASAR ===
 st.set_page_config(page_title="SANTI", page_icon="💬", layout="centered")
 
-# === API KEY GEMINI ===
-GEMINI_API_KEY = "GEMINI_API_KEY"
+# === API KEY GOOGLE ===
 
-if not GEMINI_API_KEY or GEMINI_API_KEY.strip() == "":
-    st.error("❌ API Key Gemini belum diisi di variabel GEMINI_API_KEY.")
-    st.stop()
+import streamlit as st
+import google.generativeai as genai
 
-genai.configure(api_key=GEMINI_API_KEY)
+# Pastikan kuncinya diambil dari Secrets Streamlit Cloud
+if "GOOGLE_API_KEY" in st.secrets:
+    api_key_asli = st.secrets["GOOGLE_API_KEY"]
+    genai.configure(api_key=api_key_asli)
+else:
+    st.error("Kunci API tidak terbaca di sistem Secrets!")
 
 DOC_FILENAME = "sumber.txt"
 
