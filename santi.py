@@ -1,17 +1,10 @@
 # santi_faiss_memory_temp_silent.py
 import streamlit as st
 import google.generativeai as genai
-
 # Konfigurasi API key dari secrets
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-
 # Pilih model yang valid
 model = genai.GenerativeModel("models/gemini-1.5-flash")
-
-# Contoh pemanggilan
-response = model.generate_content("Halo, apa kabar?")
-st.write(response.text)
-
 import os
 
 # === KONFIGURASI DASAR ===
