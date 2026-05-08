@@ -65,12 +65,13 @@ index, embeddings, paragraphs = buat_faiss_index(paragraphs)
 def cari_konteks_semantik(query, index, paragraphs, top_k=3):
     # Gunakan client.models.embed_content, bukan genai.embed_content
     result = client.models.embed_content(
-        model="text-embedding-004",  # Gunakan model embedding terbaru
+        model="text-embedding-001",  # Gunakan model embedding terbaru
         contents=query
     )
     
     # Ambil data vector-nya
     query_emb = result.embeddings[0].values
+    query_emb = np.array([query_emb], dtype=np.float32)
     
     # Ubah format agar sesuai dengan FAISS
     query_emb = np.array([query_emb], dtype=np.float32)
@@ -81,6 +82,11 @@ def cari_konteks_semantik(query, index, paragraphs, top_k=3):
     # Gabungkan teks dokumen yang relevan
     hasil = "\n\n".join([paragraphs[i] for i in I[0] if i != -1])
     return hasil
+
+except Exception as e:
+        # Jika embedding gagal, SANTI tetap mencoba menjawab tanpa konteks
+        st.warning(f"⚠️ Pencarian dokumen bermasalah: {e}")
+        return "
 
 
 # === BUAT JAWABAN (DENGAN MEMORY + TEMPERATUR) ===
