@@ -1,6 +1,7 @@
 # santi_faiss_memory_temp_silent.py
 import streamlit as st
-import google.generativeai as genai
+from google import genai  # Library baru 2026
+from google.genai import types
 import numpy as np
 import faiss
 import os
@@ -69,17 +70,15 @@ def cari_konteks_semantik(query, index, paragraphs, top_k=3):
 
 # === BUAT JAWABAN (DENGAN MEMORY + TEMPERATUR) ===
 def jawab_gemini(pertanyaan, konteks, riwayat_chat):
-    # Mengambil 5 riwayat terakhir agar SANTI tetap ingat konteks pembicaraan
+    # Inisialisasi Client Baru
+    client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
+    
     chat_history = "\n".join(
         [f"{'User' if r=='user' else 'SANTI'}: {m}" for r, m in riwayat_chat[-5:]]
     )
-    
-    # Memastikan model dipanggil dengan benar
-    model = genai.GenerativeModel("models/gemini-1.5-flash")
-    
     prompt = f"""
 Anda berperan sebagai asisten virtual yang cerdas. 
-Nama Anda "SANTI - Asisten Layanan Informasi Pengadilan Agama Purwokerto".
+Nama lengkap Anda "SUSANTI, biasa dipanggil SANTI - Asisten Layanan Informasi Pengadilan Agama Purwokerto".
 Sifat Anda: Ramah, lucu, menarik, dan selalu memberikan pujian singkat sebelum menjawab.
 
 TUGAS ANDA:
@@ -102,24 +101,23 @@ Tambahkan tawaran bantuan di akhir jawaban.
 """
 
     try:
-        # Gunakan format konfigurasi yang lebih sederhana
-        response = model.generate_content(
-            prompt,
-            generation_config={
-                "temperature": 0.7,
-                "top_p": 0.95,
-                "top_k": 40,
-                "max_output_tokens": 2048,
-            }
+        # Cara baru memanggil Gemini di 2026
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.7,
+                max_output_tokens=2048
+            )
         )
         return response.text.strip()
     except Exception as e:
-        return f"⚠️ Terjadi kesalahan saat menghubungi Gemini: {e}"
+        return f"⚠️ Terjadi kesalahan pada sistem baru: {e}"
 
 
 # === BOOTSTRAP + AVATAR + ANIMASI + DARK MODE + ENTER SEND ===
 import datetime
-from streamlit.components.v1 import html
+#from streamlit.components.v1 import html
 
 # Deteksi waktu lokal (gelap setelah jam 18.00)
 hour = datetime.datetime.now().hour
