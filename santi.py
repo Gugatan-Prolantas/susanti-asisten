@@ -19,7 +19,7 @@ from google.genai import types
 # Pastikan kuncinya diambil dari Secrets Streamlit Cloud
 if "GOOGLE_API_KEY" in st.secrets:
     api_key_asli = st.secrets["GOOGLE_API_KEY"]
-    genai.configure(api_key=api_key_asli)
+    client = genai.Client(api_key=api_key_asli)
 else:
     st.error("Kunci API tidak terbaca di sistem Secrets!")
 
