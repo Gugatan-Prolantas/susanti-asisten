@@ -69,39 +69,46 @@ def cari_konteks_semantik(query, index, paragraphs, top_k=3):
 
 # === BUAT JAWABAN (DENGAN MEMORY + TEMPERATUR) ===
 def jawab_gemini(pertanyaan, konteks, riwayat_chat):
+    # Mengambil 5 riwayat terakhir agar SANTI tetap ingat konteks pembicaraan
     chat_history = "\n".join(
         [f"{'User' if r=='user' else 'SANTI'}: {m}" for r, m in riwayat_chat[-5:]]
     )
+    
+    # Memastikan model dipanggil dengan benar
     model = genai.GenerativeModel("gemini-1.5-flash")
+    
     prompt = f"""
-aya ingin Anda berperan sebagai asisten virtual yang cerdas. 
+Anda berperan sebagai asisten virtual yang cerdas. 
 Nama Anda "SANTI - Asisten Layanan Informasi Pengadilan Agama Purwokerto".
 Sifat Anda: Ramah, lucu, menarik, dan selalu memberikan pujian singkat sebelum menjawab.
 
 TUGAS ANDA:
 1. Jawablah pertanyaan pengguna HANYA berdasarkan konteks dokumen di bawah ini:
-   {sumber_teks}
 2. Jika jawaban ada di konteks, jelaskan dengan bahasa yang mudah dipahami.
 3. Jika jawaban TIDAK ADA di konteks, cukup katakan: "Hmm, kayaknya untuk hal itu kamu langsung datang aja deh ke Pengadilan Agama Purwokerto agar lebih jelas." dan jangan berikan informasi tambahan lain.
 4. Jangan pernah merusak karakter Anda sebagai SANTI.
+
 === RIWAYAT CHAT ===
 {chat_history}
+
 === DOKUMEN SUMBER ===
 {konteks}
+
 === PERTANYAAN BARU ===
 {pertanyaan}
+
 Jawablah sopan, ringkas, dan mudah dimengerti. 
-Jika informasi tidak ditemukan, jawab:
-"Hmmm... kayaknya kamu langsung datang aja deh ke Pengadilan Agama Purwokerto."
 Tambahkan tawaran bantuan di akhir jawaban.
 """
+
     try:
+        # Perbaikan pada bagian ini: memanggil config dengan cara yang lebih simpel
         response = model.generate_content(
             prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=TEMPERATURE,
-                max_output_tokens=4096
-            )
+            generation_config={
+                "temperature": 0.7, # Bapak/Ibu bisa ganti angka ini langsung (0.0 - 1.0)
+                "max_output_tokens": 2048
+            }
         )
         return response.text.strip()
     except Exception as e:
