@@ -120,7 +120,7 @@ Tambahkan tawaran bantuan di akhir jawaban.
     try:
         # Baris di bawah ini harus menjorok ke kanan dibanding tulisan 'try'
         response = client.models.generate_content(
-            model="models/gemini-1.5-flash-001",
+            model="gemini-1.5-flash-001",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.7,
