@@ -3,7 +3,7 @@ import streamlit as st
 import numpy as np
 import faiss
 import google.generativeai as genai
-from google.genai import types
+import google.generativeai as genai
 client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
 import os
 
