@@ -61,33 +61,29 @@ def buat_faiss_index(paragraphs):
 index, embeddings, paragraphs = buat_faiss_index(paragraphs)
 
 
-# === SEMANTIC SEARCH (VERSI BARU 2026) ===
+# === SEMANTIC SEARCH (VERSI PERBAIKAN TOTAL) ===
 def cari_konteks_semantik(query, index, paragraphs, top_k=3):
-    # Gunakan client.models.embed_content, bukan genai.embed_content
-    result = client.models.embed_content(
-        model="text-embedding-001",  # Gunakan model embedding terbaru
-        contents=query
-    )
-    
-    # Ambil data vector-nya
-    query_emb = result.embeddings[0].values
-    query_emb = np.array([query_emb], dtype=np.float32)
-    
-    # Ubah format agar sesuai dengan FAISS
-    query_emb = np.array([query_emb], dtype=np.float32)
-    
-    # Cari di database FAISS
-    D, I = index.search(query_emb, top_k)
-    
-    # Gabungkan teks dokumen yang relevan
-    hasil = "\n\n".join([paragraphs[i] for i in I[0] if i != -1])
-    return hasil
-
-except Exception as e:
-        # Jika embedding gagal, SANTI tetap mencoba menjawab tanpa konteks
-        st.warning(f"⚠️ Pencarian dokumen bermasalah: {e}")
+    try:
+        # Memastikan pemanggilan model embedding benar
+        result = client.models.embed_content(
+            model="models/embedding-001", 
+            contents=query
+        )
+        
+        # Mengambil nilai vector
+        query_emb = result.embeddings[0].values
+        query_emb = np.array([query_emb], dtype=np.float32)
+        
+        # Pencarian pada database FAISS
+        D, I = index.search(query_emb, top_k)
+        
+        # Menggabungkan hasil teks
+        hasil = "\n\n".join([paragraphs[i] for i in I[0] if i != -1])
+        return hasil
+    except Exception as e:
+        # Baris 86: Sekarang sudah aman karena semua di atasnya sudah tertutup
+        print(f"Error embedding: {e}")
         return ""
-
 
 # === BUAT JAWABAN (DENGAN MEMORY + TEMPERATUR) ===
 def jawab_gemini(pertanyaan, konteks, riwayat_chat):
