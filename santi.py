@@ -1,18 +1,20 @@
 # santi_faiss_memory_temp_silent.py
 import streamlit as st
-from google import genai  # Library baru 2026
-from google.genai import types
 import numpy as np
 import faiss
+from google import genai  # Library baru 2026
+from google.genai import types
+client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
 import os
 
 # === KONFIGURASI DASAR ===
-st.set_page_config(page_title="SANTI", page_icon="💬", layout="centered")
+st.set_page_config(page_title="SUSANTI", page_icon="💬", layout="centered")
 
 # === API KEY GOOGLE ===
 
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # Pastikan kuncinya diambil dari Secrets Streamlit Cloud
 if "GOOGLE_API_KEY" in st.secrets:
@@ -101,18 +103,17 @@ Tambahkan tawaran bantuan di akhir jawaban.
 """
 
     try:
-        # Cara baru memanggil Gemini di 2026
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.7,
-                max_output_tokens=2048
-            )
+    response = client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            temperature=0.7,
+            max_output_tokens=2048
         )
-        return response.text.strip()
-    except Exception as e:
-        return f"⚠️ Terjadi kesalahan pada sistem baru: {e}"
+    )
+    return response.text.strip()
+except Exception as e:
+    return f"⚠️ Terjadi kesalahan: {e}"
 
 
 # === BOOTSTRAP + AVATAR + ANIMASI + DARK MODE + ENTER SEND ===
