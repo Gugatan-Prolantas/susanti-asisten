@@ -75,7 +75,7 @@ def jawab_gemini(pertanyaan, konteks, riwayat_chat):
     )
     
     # Memastikan model dipanggil dengan benar
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("models/gemini-1.5-flash")
     
     prompt = f"""
 Anda berperan sebagai asisten virtual yang cerdas. 
@@ -102,12 +102,14 @@ Tambahkan tawaran bantuan di akhir jawaban.
 """
 
     try:
-        # Perbaikan pada bagian ini: memanggil config dengan cara yang lebih simpel
+        # Gunakan format konfigurasi yang lebih sederhana
         response = model.generate_content(
             prompt,
             generation_config={
-                "temperature": 0.7, # Bapak/Ibu bisa ganti angka ini langsung (0.0 - 1.0)
-                "max_output_tokens": 2048
+                "temperature": 0.7,
+                "top_p": 0.95,
+                "top_k": 40,
+                "max_output_tokens": 2048,
             }
         )
         return response.text.strip()
