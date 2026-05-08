@@ -119,7 +119,7 @@ Tambahkan tawaran bantuan di akhir jawaban.
 
 # === BOOTSTRAP + AVATAR + ANIMASI + DARK MODE + ENTER SEND ===
 import datetime
-#from streamlit.components.v1 import html
+from streamlit.components.v1 import html
 
 # Deteksi waktu lokal (gelap setelah jam 18.00)
 hour = datetime.datetime.now().hour
