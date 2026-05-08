@@ -11,10 +11,8 @@ import os
 st.set_page_config(page_title="SUSANTI", page_icon="💬", layout="centered")
 
 # === API KEY GOOGLE ===
-
 import streamlit as st
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 
 # Pastikan kuncinya diambil dari Secrets Streamlit Cloud
 if "GOOGLE_API_KEY" in st.secrets:
