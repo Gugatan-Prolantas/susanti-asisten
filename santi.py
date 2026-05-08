@@ -1,31 +1,26 @@
 # santi_faiss_memory_temp_silent.py
+
+import os
+import numpy as np
+import faiss
 import streamlit as st
 import google.generativeai as genai
-# Konfigurasi API key dari secrets
-genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-# Pilih model yang valid
-model = genai.GenerativeModel("models/gemini-1.5-flash")
-import os
 
 # === KONFIGURASI DASAR ===
 st.set_page_config(page_title="SUSANTI", page_icon="💬", layout="centered")
 
 # === API KEY GOOGLE ===
-import streamlit as st
-import google.generativeai as genai
-
-# Pastikan kuncinya diambil dari Secrets Streamlit Cloud
 if "GOOGLE_API_KEY" in st.secrets:
     api_key_asli = st.secrets["GOOGLE_API_KEY"]
-    client = genai.Client(api_key=api_key_asli)
+    genai.configure(api_key=api_key_asli)
 else:
     st.error("Kunci API tidak terbaca di sistem Secrets!")
+    st.stop()
 
 DOC_FILENAME = "sumber.txt"
 
 # === ATUR TEMPERATUR MODEL ===
 TEMPERATURE = 0.9  # 0.0 = faktual, 1.0 = kreatif
-
 
 # === LOAD DOKUMEN SUMBER ===
 if not os.path.exists(DOC_FILENAME):
@@ -36,7 +31,6 @@ with open(DOC_FILENAME, "r", encoding="utf-8") as f:
     sumber_teks = f.read()
 
 paragraphs = [p.strip() for p in sumber_teks.split("\n\n") if p.strip()]
-
 
 # === BUAT EMBEDDING ===
 @st.cache_resource(show_spinner=False)
@@ -55,31 +49,21 @@ def buat_faiss_index(paragraphs):
     index.add(embeddings)
     return index, embeddings, paragraphs
 
-
 index, embeddings, paragraphs = buat_faiss_index(paragraphs)
 
-
-# === SEMANTIC SEARCH (VERSI PERBAIKAN TOTAL) ===
+# === SEMANTIC SEARCH ===
 def cari_konteks_semantik(query, index, paragraphs, top_k=3):
     try:
-        # Memastikan pemanggilan model embedding benar
-        result = client.models.embed_content(
-            model="models/embedding-001", 
-            contents=query
+        result = genai.embed_content(
+            model="models/gemini-embedding-2",
+            content=query
         )
-        
-        # Mengambil nilai vector
-        query_emb = result.embeddings[0].values
-        query_emb = np.array([query_emb], dtype=np.float32)
-        
-        # Pencarian pada database FAISS
+        query_emb = np.array([result["embedding"]], dtype=np.float32)
+
         D, I = index.search(query_emb, top_k)
-        
-        # Menggabungkan hasil teks
         hasil = "\n\n".join([paragraphs[i] for i in I[0] if i != -1])
         return hasil
     except Exception as e:
-        # Baris 86: Sekarang sudah aman karena semua di atasnya sudah tertutup
         print(f"Error embedding: {e}")
         return ""
 
