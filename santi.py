@@ -9,7 +9,7 @@ import os
 st.set_page_config(page_title="SANTI", page_icon="💬", layout="centered")
 
 # === API KEY GEMINI ===
-GEMINI_API_KEY = "AIzaSyD4aYZnmeArnKP9FHI5g6qTy6wIuvYxetY"
+GEMINI_API_KEY = "GEMINI_API_KEY"
 
 if not GEMINI_API_KEY or GEMINI_API_KEY.strip() == "":
     st.error("❌ API Key Gemini belum diisi di variabel GEMINI_API_KEY.")
