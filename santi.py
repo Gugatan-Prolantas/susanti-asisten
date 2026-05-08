@@ -69,12 +69,19 @@ def cari_konteks_semantik(query, index, paragraphs, top_k=3):
 
 # === BUAT JAWABAN (DENGAN MEMORY + TEMPERATUR) ===
 def jawab_gemini(pertanyaan, konteks, riwayat_chat):
-    # Inisialisasi Client Baru
-    client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
-    
+    # Ambil API key dari secrets
+    api_key_asli = st.secrets["GOOGLE_API_KEY"]
+    genai.configure(api_key=api_key_asli)
+
+    # Buat model Gemini
+    model = genai.GenerativeModel("models/gemini-1.5-flash")
+
+    # Gabungkan riwayat chat
     chat_history = "\n".join(
         [f"{'User' if r=='user' else 'SANTI'}: {m}" for r, m in riwayat_chat[-5:]]
     )
+
+    # Prompt utama
     prompt = f"""
 Anda berperan sebagai asisten virtual yang cerdas. 
 Nama lengkap Anda "SUSANTI, biasa dipanggil SANTI - Asisten Layanan Informasi Pengadilan Agama Purwokerto".
@@ -100,11 +107,10 @@ Tambahkan tawaran bantuan di akhir jawaban.
 """
 
     try:
-        # Baris di bawah ini harus menjorok ke kanan dibanding tulisan 'try'
-        response = client.models.generate_content(
-            model="gemini-1.5-flash-001",
-            contents=prompt,
-            config=types.GenerateContentConfig(
+        # Pemanggilan model dengan konfigurasi temperatur
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
                 temperature=0.7,
                 max_output_tokens=2048
             )
