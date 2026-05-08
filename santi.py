@@ -86,7 +86,7 @@ def cari_konteks_semantik(query, index, paragraphs, top_k=3):
 except Exception as e:
         # Jika embedding gagal, SANTI tetap mencoba menjawab tanpa konteks
         st.warning(f"⚠️ Pencarian dokumen bermasalah: {e}")
-        return "
+        return ""
 
 
 # === BUAT JAWABAN (DENGAN MEMORY + TEMPERATUR) ===
