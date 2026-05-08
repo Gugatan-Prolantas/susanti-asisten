@@ -134,7 +134,8 @@ Tambahkan tawaran bantuan di akhir jawaban.
 
 # === BOOTSTRAP + AVATAR + ANIMASI + DARK MODE + ENTER SEND ===
 import datetime
-from streamlit.components.v1 import html
+
+# Hapus baris 'from streamlit.components.v1 import html' di sini
 
 # Deteksi waktu lokal (gelap setelah jam 18.00)
 hour = datetime.datetime.now().hour
@@ -148,6 +149,7 @@ bubble_bot_bg = "#2e2e2e" if is_dark else "#e9ecef"
 bubble_user_color = "#ffffff" if is_dark else "#0f5132"
 bubble_bot_color = "#f1f1f1" if is_dark else "#212529"
 
+# Menggunakan st.markdown untuk CSS dan JS (Ini cara yang benar di 2026)
 st.markdown(f"""
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
@@ -156,29 +158,12 @@ body {{
     font-family: "Poppins", sans-serif;
     color: {text_color};
 }}
-.chat-wrapper {{
-    max-width: 700px;
-    margin: 25px auto;
-    border-radius: 15px;
-    background-color: {'#1e1e1e' if is_dark else '#ffffff'};
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 85vh;
-}}
-.chat-header {{
-    background-color: {header_color};
-    color: white;
-    padding: 15px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-}}
 .chat-body {{
     flex: 1;
     overflow-y: auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }}
 .chat-message {{
     display: flex;
@@ -195,7 +180,6 @@ body {{
     border-radius: 50%;
     overflow: hidden;
     margin: 0 8px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }}
 .chat-avatar img {{
     width: 100%;
@@ -208,7 +192,6 @@ body {{
     border-radius: 18px;
     font-size: 15px;
     line-height: 1.4;
-    animation: fadeIn 0.4s ease-in;
 }}
 .user .chat-bubble {{
     background-color: {bubble_user_bg};
@@ -225,21 +208,17 @@ body {{
     to {{ opacity: 1; transform: translateY(0); }}
 }}
 </style>
+
 <script>
-function scrollToBottom() {{
-    const chatBody = window.parent.document.querySelector('.chat-body');
-    if (chatBody) {{
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }}
+// Fungsi otomatis scroll ke bawah setiap ada pesan baru
+const chatBody = window.parent.document.querySelector('.chat-body');
+if (chatBody) {{
+    chatBody.scrollTop = chatBody.scrollHeight;
 }}
-setTimeout(scrollToBottom, 500);
 </script>
 """, unsafe_allow_html=True)
 
-
 # === CHAT STRUCTURE ===
-# st.markdown("<div class='chat-wrapper'>", unsafe_allow_html=True)
-# st.markdown("<div class='chat-header'>💬 SANTI - ASISTEN LAYANAN INFORMASI PENGADILAN AGAMA PURWOKERTO</div>", unsafe_allow_html=True)
 st.markdown("<div class='chat-body'>", unsafe_allow_html=True)
 
 if "chat_history" not in st.session_state:
@@ -264,7 +243,7 @@ for role, msg in st.session_state.chat_history:
         </div>
         """, unsafe_allow_html=True)
 
-st.markdown("</div>", unsafe_allow_html=True)  # end chat-body
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # === INPUT TANPA PLACEHOLDER, ENTER UNTUK KIRIM ===
