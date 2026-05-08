@@ -102,18 +102,6 @@ Jawablah sopan, ringkas, dan mudah dimengerti.
 Tambahkan tawaran bantuan di akhir jawaban.
 """
 
-    #try:
-    response = client.models.generate_content(
-        model="gemini-1.5-flash",
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.7,
-            max_output_tokens=2048
-        )
-    )
-    return response.text.strip()
-except Exception as e:
-    return f"⚠️ Terjadi kesalahan: {e}"
     try:
         # Baris di bawah ini harus menjorok ke kanan dibanding tulisan 'try'
         response = client.models.generate_content(
