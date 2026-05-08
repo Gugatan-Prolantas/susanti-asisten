@@ -34,7 +34,7 @@ if not os.path.exists(DOC_FILENAME):
     st.error(f"❌ File '{DOC_FILENAME}' tidak ditemukan.")
     st.stop()
 
-with open(DOC_FILENAME, "r", encoding="utf-8") as f:
+with open(DOC_FILENAME, "r",F encoding="utf-8") as f:
     sumber_teks = f.read()
 
 paragraphs = [p.strip() for p in sumber_teks.split("\n\n") if p.strip()]
@@ -120,7 +120,7 @@ Tambahkan tawaran bantuan di akhir jawaban.
     try:
         # Baris di bawah ini harus menjorok ke kanan dibanding tulisan 'try'
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="models/gemini-1.5-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.7,
