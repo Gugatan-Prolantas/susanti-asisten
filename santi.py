@@ -274,7 +274,7 @@ if (t) {
 }
 </script>
 """
-html(html_code, height=0)
+st.markdown(html_code, unsafe_allow_html=True)
 
 
 # === PROSES CHAT ===
