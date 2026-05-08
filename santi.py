@@ -32,6 +32,15 @@ with open(DOC_FILENAME, "r", encoding="utf-8") as f:
 
 paragraphs = [p.strip() for p in sumber_teks.split("\n\n") if p.strip()]
 
+#CEK VERSION
+import google.generativeai as genai
+
+genai.configure(api_key="API_KEY_KAMU")
+
+for m in genai.list_models():
+    print(m.name, m.supported_generation_methods)
+
+
 # === BUAT EMBEDDING ===
 @st.cache_resource(show_spinner=False)
 def buat_faiss_index(paragraphs):
