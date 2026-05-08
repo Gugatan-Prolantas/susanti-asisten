@@ -2,7 +2,7 @@
 import streamlit as st
 import numpy as np
 import faiss
-from google import genai  # Library baru 2026
+import google.generativeai as genai
 from google.genai import types
 client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
 import os
