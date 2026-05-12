@@ -1,6 +1,6 @@
-# rani-faiss
-RANI - Layanan Informasi Virtual Pengadilan Agama Medan (Streamlit + FAISS)
+# santi
+SANTI - Layanan Informasi Virtual Pengadilan Agama Purwokerto (Streamlit + FAISS)
 
 jalankan dengan perintah
 
-"streamlit run rani.py"
+"streamlit run santi.py"
