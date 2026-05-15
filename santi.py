@@ -74,7 +74,7 @@ def jawab_gemini(pertanyaan, konteks, riwayat_chat):
     genai.configure(api_key=api_key_asli)
 
     # Buat model Gemini
-    model = genai.GenerativeModel("models/gemini-1.5-flash")
+    model = genai.GenerativeModel("models/gemini-2.0-flash")
 
     # Gabungkan riwayat chat
     chat_history = "\n".join(
